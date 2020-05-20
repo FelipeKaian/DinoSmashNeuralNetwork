@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+	<head>
+		<title>My Project</title>
+		<style>
+			canvas{
+				position: absolute;
+				top: 0px;
+				bottom: 0px;
+				left: 0px;
+				right: 0px;
+				margin: auto;
+			}
+
+		</style>
+	</head>
+	<body>
+		<script>
+		var canvas,ctx,sh,sw,frames = 0,
+
+		dino = {
+			cor: "#7fff00",
+			x: 900,
+			y: 975,
+			spdx: 5,
+			g: 1.5,
+			direction: 1,
+			w:50,
+			h:75,
+
+			atualiza: function(){
+				
+				
+				
+				if(this.x > 600 && (this.x+this.w) < 1200){
+					this.x += this.spdx;
+				
+				}else{
+					if(this.x <= 600){
+						this.x = 600;
+					}
+					if(this.x+this.w >= 1200){
+						this.x = 1200-this.w;
+					}
+
+					this.direction *= -1;
+					this.spdx *= this.direction;
+					this.x += this.spdx;
+				}
+			}
+			,
+			 desenha: function(){
+			 	ctx.fillStyle = this.cor;
+			 	ctx.fillRect(this.x,this.y,this.w,this.h);
+			}
+		},
+		meteor ={
+			meteors: [],
+			tempospawn:200,
+			time:200,
+
+			insere: function(){
+				this.meteors.push({
+					x:(Math.floor(400*Math.random())+600),
+					y:-200,
+					spdy:7,
+				});
+
+				this.time = this.tempospawn;
+			},
+			atualiza: function(){
+				if(this.time <= 0){
+					this.insere();
+				}
+				for (var i = this.meteors.length - 1; i >= 0; i--) {
+					var meteor = this.meteors[i];
+					meteor.y += meteor.spdy;
+					if(meteor.y >= 860){
+						this.meteors.splice(i,1);
+						i--;
+					}
+				}
+
+				this.time--;
+
+			},
+			desenha: function(){
+				ctx.fillStyle = "#D2691E";
+				for (var i = this.meteors.length - 1; i >= 0; i--) {
+					var meteor = this.meteors[i];
+					ctx.fillRect(meteor.x,meteor.y,200,200);
+				}
+			}
+
+
+		};
+
+		function main(){
+			
+			sh = window.innerHeight;
+			sw = window.innerWidth;
+
+			if(sw >=500){
+				sh = 1200;
+				sw = 1800;
+			}
+
+			canvas = document.createElement("canvas");
+			canvas.width = sw;
+			canvas.height = sh;
+			canvas.style.border = "1px solid #000";
+
+			ctx = canvas.getContext("2d");
+			document.body.appendChild(canvas);
+
+			roda();
+		}
+
+		function bgdraw(){
+			ctx.fillStyle = "#50beff";
+			ctx.fillRect(600,0,600,sh);
+
+			ctx.fillStyle = "#228B22";
+			ctx.fillRect(600,1050,600,50)
+
+			ctx.fillStyle = "#8B4513";
+			ctx.fillRect(600,1100,600,100)
+		}
+
+		function iainput(){
+
+			/////////////
+
+
+
+			//input da ia = dino.dinos[i].direction//
+
+
+
+			/////////////
+		}
+
+		function roda(){
+			atualiza();
+			desenha();
+
+			window.requestAnimationFrame(roda);
+		}
+
+		function atualiza (){
+			meteor.atualiza();
+			
+			dino.atualiza();
+			frames++;
+		}
+
+		function desenha (){
+			
+			bgdraw();
+			dino.desenha();
+			meteor.desenha();
+			
+			
+			ctx.fillStyle = "#1C1C1C";
+			ctx.fillRect(0,0,600,sh);
+			ctx.fillRect(1200,0,600,sh);
+
+		}
+
+		main();
+
+		</script>
+	</body>
+<html>
